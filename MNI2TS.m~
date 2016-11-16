@@ -21,7 +21,6 @@ function [dD,C,T,XYZ,FT] = MNI2TS(D,MNI,rad)
 try, XYZ = MNI;   catch,  return;     end
 try, rad      ;   catch,  rad   = 5;  end
 
-if ~isobject(D) && iscell(D); D = loadarrayspm(D); D = D{1}; end
 
 % Find sources near MNI coordinates
 inv   = D.inv{end};
@@ -61,22 +60,20 @@ C = D.conditions;
 T = D.time;
 
 if nargout == 5
-    FT = ExtraData(D);
+    FT = ExtraData(D,dD);
 end
 
 end
 
-function FT = ExtraData(D)
+function FT = ExtraData(D,dD)
 
-ft       = D.fttimelock;
+ft      = D.fttimelock;
+
 FT.time  = D.time;
 FT.ft    = ft;
 FT.cnd   = D.conditions;
 FT.cdlst = D.condlist;
 FT.fs    = D.fsample;
-FT.onset = D.timeonset;
-
-FT.badtrials = D.badtrials;
 
 end
 
