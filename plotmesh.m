@@ -2,10 +2,14 @@ function plotmesh(D,o)
 % Plot glass mesh brain with MNI coordinates marked
 % from source localised SPM MEEG object
 %
+% D is a meeg dataset
+% o is a set of [n x 3] MNI coordinates
 %
 % AS2016
 
 %for i = 1:2; subplot(1,2,i),plotmesh(D,MNI);end
+
+if iscell(D); D = spm_eeg_load(D{1}); end
 
 % verts & faces for brain
 vert = D.inv{end}.forward(end).mesh.vert;

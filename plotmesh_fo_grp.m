@@ -1,4 +1,4 @@
-function plotmesh_fo_grp(D,o,t)
+function plotmesh_fo_grp(D,o,t,woi,foi,type,CL)
 % Plot glass mesh brain with MNI coordinates marked
 % from source localised SPM MEEG objects
 %
@@ -10,11 +10,12 @@ function plotmesh_fo_grp(D,o,t)
 %---------------------------------------------------------
 dS    = 100; % dot size for functional overlay of trial{t}
 s     = 500; % patch size for MNI coordinates
-CL    = [.4 .4 .4];%'r'; % colour of MNI patch
 
-woi   = [-.1 .3];   % time window if interest for source data in trial{t}
-foi   = [];       % freq window if interest for source data in trial{t}
-type  = 'evoked'; % 'evoked', 'induced' or 'trial'
+try CL; catch; CL    = 'r'; end%[.4 .4 .4];%'r'; % colour of MNI patch
+
+try woi;   catch; woi = [-.1 .3]; end  % time window if interest for source data in trial{t}
+try foi;   catch; foi = [];       end  % freq window if interest for source data in trial{t}
+try type;  catch; type  = 'evoked';end % 'evoked', 'induced' or 'trial'
 
 %for i = 1:2; subplot(1,2,i),plotmesh(D,MNI);end
 
@@ -36,9 +37,9 @@ h = patch('faces',face,'vertices',[x(:) y(:) z(:)]);
 set(h,'FaceColor',[.4 .4 .4]);
 box off;
 grid off;
-whitebg(1,'w'); 
+%whitebg(1,'w'); 
 camlight('right')
-axis tight
+%axis tight
 set(h,'EdgeColor','none')
 material dull
 alpha(.2);
@@ -49,6 +50,8 @@ hold on;
 
 % call function for projecting into source space
 %---------------------------------------------------------
+if isempty(woi);  woi = [0 .3]; end
+if isempty(type); type = 'evoked'; end
 for SUB = 1:length(D)
     if SUB > 1; fprintf(repmat('\b',[size(str),1])); end
     str = sprintf('Fetching projections for %d of %d datasets\n',SUB,length(D));
@@ -60,13 +63,20 @@ for SUB = 1:length(D)
 end
 
 %st = PEig(full(st'));
-st = mean(st);
-scatter3(x,y,z,[],st(:),'filled');alpha(.3);
+mst = mean(st,1);
+%cbr = round(TSNorm(st,6,2));
+%cbr = sum(cbr,1);
+%cbr = cbr-min(cbr);
+
+%scatter3(x,y,z,[],cbr,'filled');alpha(.3);
+scatter3(x,y,z,[],mst(:),'filled');alpha(.3);
 
 
 % Discard other datasets now:
 D = D{1};
 
+if ~isempty(o) % MNIs
+    
 % find vertices corresponding to provided MNIs
 %---------------------------------------------------------
 XYZ   = o;
@@ -102,6 +112,7 @@ for i = 1:Ns
     end
 end
 
+end
 
 
 

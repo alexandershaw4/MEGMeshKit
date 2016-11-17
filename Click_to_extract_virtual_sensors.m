@@ -24,8 +24,12 @@ M = [...             % MMN MNI regions to project for guidance
 M = [-7 -103 -4]; %  ~ V1
 
 
-plotmesh_fo_grp(f,M,t); % projection with mean 'activations' over datsets
-[rx,ry,rz] = get_xyz(); % get cursor click location [turn off rotation first]
+woi  = [];
+foi  = [];
+type = [];
+
+plotmesh_fo_grp(f,M,t,woi,foi,type); % projection with mean 'activations' over datsets
+[rx,ry,rz] = get_xyz();              % get cursor click location [turn off rotation first]
 
 for i = 1:length(f)
     
@@ -37,4 +41,9 @@ end
 
 
 
-
+[-46    20     8]
+[-61   -32     8]
+[-42   -14     7]
+[46    20     8]
+[59   -25     8]
+[46   -14     8]

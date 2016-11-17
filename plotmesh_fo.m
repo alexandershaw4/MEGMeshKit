@@ -1,4 +1,4 @@
-function plotmesh_fo(D,o,t)
+function plotmesh_fo(D,o,t,woi,foi)
 % Plot glass mesh brain with MNI coordinates marked
 % from source localised SPM MEEG object
 %
@@ -11,10 +11,10 @@ dS    = 100; % dot size for functional overlay of trial{t}
 s     = 500; % patch size for MNI coordinates
 CL    = 'r'; % colour of MNI patch
 
-woi   = [0 .3];   % time window if interest for source data in trial{t}
-foi   = [];       % freq window if interest for source data in trial{t}
+try woi; catch woi   = [0 .3];end   % time window if interest for source data in trial{t}
+try foi; catch foi   = [];    end   % freq window if interest for source data in trial{t}
 type  = 'evoked'; % 'evoked', 'induced' or 'trial'
-
+if isempty(woi); woi = [0 .3]; end
 
 %for i = 1:2; subplot(1,2,i),plotmesh(D,MNI);end
 
@@ -49,7 +49,8 @@ hold on;
 %---------------------------------------------------------
 FO   = rebuild(D,woi,type,foi);
 t    = FO.JW{t};
-scatter3(x,y,z,[],t,'filled');alpha(.3)
+scatter3(x,y,z,[],t,'filled');
+alpha(.3)
 
 
 % find vertices corresponding to provided MNIs
