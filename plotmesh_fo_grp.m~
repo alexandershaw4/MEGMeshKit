@@ -30,8 +30,6 @@ if iscell(D) && ~isobject(D{1}); D = loadarrayspm(D);
 elseif ~iscell(D); return;
 end
 
-warning off %
-
 % verts & faces for brain
 %---------------------------------------------------------
 vert  = D{1}.inv{end}.forward(end).mesh.vert;
@@ -47,7 +45,7 @@ set(h,'FaceColor',[.4 .4 .4]);
 box off;
 grid off;
 %whitebg(1,'w'); 
-camlight('headlight')
+camlight('right')
 %axis tight
 set(h,'EdgeColor','none')
 material dull
@@ -84,15 +82,11 @@ for SUB = 1:length(D)
     elseif iscell(t)
         % get indices of this condition[s] name [spm]
         L         = D{1}.condlist;
-        fprintf('Averaging projections for %d condition labels\n',length(t));
         for cond = 1:length(t)
             this      = find(strcmp(t{cond},L));
             it        = FO.JW{this};
-            if cond == 1
-                st(SUB,:) = [mean(it,2)*(1/length(t))];
-            else
-                st(SUB,:) = [mean(it,2)*(1/length(t))]' + st(SUB,:);
-            end
+            all{c
+            st(SUB,:) = mean(it,2);
         end
         
     end
@@ -113,9 +107,10 @@ end
 trisurf(face,x,y,z,mst); 
 alpha(trans)
 set(h,'EdgeColor','interp')
+%set(h,'EdgeAlpha',trans);
+brighten(1)
 set(h,'FaceVertexCData',mst');
 shading interp
-camlight headlight
   
 % Discard other datasets now:
 D = D{1};
@@ -153,7 +148,7 @@ for i = 1:Ns
                  vert(svert{i,j},2),...
                  vert(svert{i,j},3),...
                  s,CL,'filled');
-                    alpha(trans)
+                    alpha(.2)
     end
 end
 

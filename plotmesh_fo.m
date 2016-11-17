@@ -1,4 +1,4 @@
-function plotmesh_fo(D,o,t,woi,foi)
+function plotmesh_fo(D,o,t,woi,foi,type,CL,trans)
 % Plot glass mesh brain with MNI coordinates marked
 % from source localised SPM MEEG object
 %
@@ -11,9 +11,12 @@ dS    = 100; % dot size for functional overlay of trial{t}
 s     = 500; % patch size for MNI coordinates
 CL    = 'r'; % colour of MNI patch
 
-try woi; catch woi   = [0 .3];end   % time window if interest for source data in trial{t}
-try foi; catch foi   = [];    end   % freq window if interest for source data in trial{t}
-type  = 'evoked'; % 'evoked', 'induced' or 'trial'
+try woi;  catch woi   = [0 .3];  end  % time window if interest for source data in trial{t}
+try foi;  catch foi   = [];      end  % freq window if interest for source data in trial{t}
+try type; catch type  = 'evoked';end; % 'evoked', 'induced' or 'trial'
+try CC;   catch;CL    = 'r'; end
+try trans;catch;trans = .4; end
+
 if isempty(woi); woi = [0 .3]; end
 
 %for i = 1:2; subplot(1,2,i),plotmesh(D,MNI);end
@@ -48,9 +51,44 @@ hold on;
 % call function for projecting into source space
 %---------------------------------------------------------
 FO   = rebuild(D,woi,type,foi);
-t    = FO.JW{t};
-scatter3(x,y,z,[],t,'filled');
-alpha(.3)
+%t    = FO.JW{t};
+
+% Get relevant trial data
+%----------------------------------
+if isnumeric(t) && length(t) == 1
+    
+    % just get this trial / type
+    it  = FO.JW{t};
+    st  = it;
+elseif isnumeric(t)
+    
+    % get trials of vector
+    it  = spm_cat({FO.JW{t}});
+    st  = mean(it,2);
+elseif iscell(t)
+    
+    % get indices of this condition[s] name [spm]
+    L         = D.condlist;
+    fprintf('Averaging projections for %d condition labels\n',length(t));
+    for cond = 1:length(t)
+        this      = find(strcmp(t{cond},L));
+        it        = FO.JW{this};
+        if cond == 1; st = [mean(it,2)*(1/length(t))];
+        else;         st = [mean(it,2)*(1/length(t))]' + st;
+        end
+    end
+    
+end
+
+trisurf(face,x,y,z,st); 
+alpha(trans)
+set(h,'EdgeColor','interp')
+set(h,'FaceVertexCData',st);
+shading interp
+camlight headlight
+
+%scatter3(x,y,z,[],st,'filled');
+%alpha(.3)
 
 
 % find vertices corresponding to provided MNIs

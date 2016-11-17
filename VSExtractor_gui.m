@@ -12,7 +12,7 @@ function varargout = VSExtractor_gui(varargin)
 %
 % AS2016
 
-% Last Modified by GUIDE v2.5 17-Nov-2016 10:37:55
+% Last Modified by GUIDE v2.5 17-Nov-2016 17:29:10
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -67,16 +67,18 @@ if isfield(handles,'MNI'); M = handles.MNI; else M = []; end
 if isfield(handles,'M'); M = handles.M; else M = []; end
 if isfield(handles,'t'); t = handles.t; else t = 1 ; end
 
-if isfield(handles,'woi'); woi  = handles.woi;  else woi  = []; end
-if isfield(handles,'foi'); foi  = handles.foi;  else foi  = []; end
-if isfield(handles,'type');type = handles.type; else type = 'evoked'; end
-if isfield(handles,'CL');  CL   = handles.CL;   else CL   = 'r'; end
+if isfield(handles,'woi');  woi  = handles.woi;  else woi  = []; end
+if isfield(handles,'foi');  foi  = handles.foi;  else foi  = []; end
+if isfield(handles,'type'); type = handles.type; else type = 'evoked'; end
+if isfield(handles,'CL');   CL   = handles.CL;   else CL   = 'm'; end
+if isfield(handles,'trans');trans= handles.trans;else trans= []; end
 
 f = handles.G;
 
-plotmesh_fo_grp(f,M,t,woi,foi,type,CL);
+plotmesh_fo_grp(f,M,t,woi,foi,type,CL,trans);
 h=rotate3d;
 set(h,'Enable','on');
+drawnow
 
 % Save the handles structure.
 guidata(hObject,handles); 
@@ -111,7 +113,13 @@ function edit2_Callback(hObject, eventdata, handles)
 
 
 % Get trial / condition selection if specified
-handles.t = str2num( get(hObject,'String') );
+try 
+    if iscell( eval( get(hObject,'String') ) );
+       handles.t = ( eval( get(hObject,'String') ) );
+    end
+catch
+       handles.t = str2num( get(hObject,'String') );
+end
 
 % Save the handles structure.
 guidata(hObject,handles); 
@@ -149,7 +157,9 @@ function pushbutton2_Callback(hObject, eventdata, handles)
     for i = 1:length(GG)
         handles.G{i,:} = GG{i}; % append paths
     end
-        
+    
+set(gca,'visible','off');
+
 % Save the handles structure.
 guidata(hObject,handles); 
 
@@ -283,9 +293,9 @@ for i = 1:length(f)
 end
 
 assignin('base','D',dD);
-assignin('base','Conds',dD);
-assignin('base','Time',dD);
-assignin('base','XYZ',dD);
+assignin('base','Conds',C);
+assignin('base','Time',T);
+assignin('base','XYZ',XYZ);
 
 
 
@@ -444,3 +454,46 @@ clc;
 cla();
 % Save the handles structure.
 guidata(hObject,handles); 
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+% Set transparency slider
+v = get(hObject,'Value');% * ( get(hObject,'Min') / get(hObject,'Max') );
+
+handles.trans = v;
+
+cla();
+pushbutton1_Callback(hObject, eventdata, handles);
+
+% Save the handles structure.
+guidata(hObject,handles); 
+
+
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in pushbutton12.
+function pushbutton12_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+cla();
