@@ -148,27 +148,16 @@ function pushbutton2_Callback(hObject, eventdata, handles)
     
     if ~iscell(G); G = {G}; end
     
-    if strcmp(G{:},'datasets.mat')
-        
-        % specify cell array of full paths
-        G = load(G{:});
-        fn = fieldnames(G);
-        G = G.(fn{1});
-        GG = loadarrayspm(G);
-        fprintf('loaded %d datasets from file\n',length(GG));
-        handles.G = GG;
-        
-    else
-        
-        for i = 1:length(G)
-            GG{i} = [Pth G{i}];
-        end
-        
-        GG = loadarrayspm(GG);
-        
-        for i = 1:length(GG)
-            handles.G{i,:} = GG{i}; % append paths
-        end
+    
+    
+    for i = 1:length(G)
+        GG{i} = [Pth G{i}];
+    end
+    
+    GG = loadarrayspm(GG);
+    
+    for i = 1:length(GG)
+        handles.G{i,:} = GG{i}; % append paths
     end
     
 set(gca,'visible','off');
@@ -462,7 +451,6 @@ try handles = rmfield(handles,'foi');end
 try handles = rmfield(handles,'woi');end
 try handles = rmfield(handles,'CL');end
 try handles = rmfield(handles,'orig'); end
-try handles = rmfield(handles,'t'); end
 
 clc;
 cla();

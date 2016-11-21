@@ -84,14 +84,37 @@ for SUB = 1:length(D)
     elseif iscell(t)
         % get indices of this condition[s] name [spm]
         L         = D{1}.condlist;
-        fprintf('Averaging projections for %d condition labels\n',length(t));
         for cond = 1:length(t)
             this      = find(strcmp(t{cond},L));
-            it        = FO.JW{this};
-            if cond == 1
-                st(SUB,:) = [mean(it,2)*(1/length(t))];
-            else
-                st(SUB,:) = [mean(it,2)*(1/length(t))]' + st(SUB,:);
+            
+            if ~isempty(this) 
+                % found condition specified
+                fprintf('Averaging projections for %d condition labels\n',length(t));
+                it        = FO.JW{this};
+                if cond == 1
+                    st(SUB,:) = [mean(it,2)*(1/length(t))];
+                else
+                    st(SUB,:) = [mean(it,2)*(1/length(t))]' + st(SUB,:);
+                end
+                
+            elseif isempty(this)
+                % find any partial matches
+                this = strmatch(t{cond},L);
+                if ~isempty(this)
+                   fprintf('Averaging projections for %d condition labels\n',length(this));
+
+                for k = 1:length(this)
+                    it        = FO.JW{this(k)};
+                    if cond == 1
+                        st(SUB,:) = [mean(it,2)*(1/length(t))];
+                    else
+                        st(SUB,:) = [mean(it,2)*(1/length(t))]' + st(SUB,:);
+                    end
+                end
+                
+                else
+                    fprintf('no conditions found!\n');
+                end
             end
         end
         
