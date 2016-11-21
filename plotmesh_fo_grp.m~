@@ -52,7 +52,7 @@ grid off;
 set(h,'EdgeColor','none')
 material dull
 alpha(.2);
-lighting flat %phong
+lighting flat%phong
 set(gca,'visible','off');
 set(gcf,'inverthardcopy','off');
 hold on;

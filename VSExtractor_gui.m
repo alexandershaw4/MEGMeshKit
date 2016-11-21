@@ -154,6 +154,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
         G = load(G{:});
         fn = fieldnames(G);
         G = G.(fn{1});
+        fprintf('Please wait. Loading %d datasets from file..\n',length(G));
         GG = loadarrayspm(G);
         fprintf('loaded %d datasets from file\n',length(GG));
         handles.G = GG;
@@ -163,9 +164,9 @@ function pushbutton2_Callback(hObject, eventdata, handles)
         for i = 1:length(G)
             GG{i} = [Pth G{i}];
         end
-        
+        fprintf('Please wait. Loading %d datasets from file..\n',length(GG));
         GG = loadarrayspm(GG);
-        
+        fprintf('loaded %d datsets\n',length(GG));
         for i = 1:length(GG)
             handles.G{i,:} = GG{i}; % append paths
         end
