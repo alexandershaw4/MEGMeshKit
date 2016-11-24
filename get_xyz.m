@@ -18,12 +18,23 @@ for i=1:n
 %         XYZ = point2d(1:3)';
         
     dcm_obj = datacursormode(gcf);
+    waitforbuttonpress
 
     set(dcm_obj,'DisplayStyle','datatip',...
     'SnapToDataVertex','off','Enable','on');
     drawnow
-    waitforbuttonpress
     c_info = getCursorInfo(dcm_obj);
+    
+    vert        = handles.vert(handles.Is, :);
+    coord       = get(handles.sources_axes, 'CurrentPoint');
+    dist        = sum((vert - repmat(coord(1, :), size(vert, 1), 1)).^2, 2);
+    [junk, ind] = min(dist);
+    coord       = vert(ind, :);
+    
+    
+    trg = get(c_info.Target);
+    %Position: [-0.0221 0.0749 0.0765]
+    
     
     
     % record click at peak:

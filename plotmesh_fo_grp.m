@@ -152,7 +152,10 @@ alpha(trans)
 set(h,'EdgeColor','interp')
 set(h,'FaceVertexCData',mst');
 shading interp
-camlight headlight
+axis tight
+%camlight headlight
+
+
 
 % enable blanking of overlay
 if ~isempty(trs);
@@ -161,8 +164,6 @@ if ~isempty(trs);
     %cmap(1:6,:) = zeros(6,3)+.4;
     sz = length(cmap);
     sz = round(sz*(.5*trs));
-    
-    
     cmap(1:sz,:)=zeros(sz,3)+.4;
     colormap(cmap);
 end

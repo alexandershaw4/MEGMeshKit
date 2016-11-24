@@ -279,7 +279,7 @@ for i = 1:npos
     % retain per pos
     nx(i) = coord(1);
     ny(i) = coord(2);
-    nz(i) = coord(3);
+    nz(i) = coord(2);
 end
 
 datacursormode off;
@@ -367,15 +367,13 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 %M(:,1) = handles.orig.x;
 %M(:,2) = handles.orig.y;
 %M(:,3) = handles.orig.z;
- X = handles.capt.x; X = (X(1,:));
- Y = handles.capt.y; Y = (Y(1,:));
- Z = handles.capt.z; Z = (Z(1,:));
+% X = handles.capt.x; X = (X(1,:));
+% Y = handles.capt.y; Y = (Y(1,:));
+% Z = handles.capt.z; Z = (Z(1,:));
 
+coord = [handles.capt.x handles.capt.y handles.capt.z];
 
-%coord = [handles.capt.x handles.capt.y handles.capt.z];
-
-%axes(handles.axes1);
-%plot3(coord(1), coord(2), coord(3), 'bo', 'MarkerSize', 10);
+plot3(coord(1), coord(2), coord(3), 'bo', 'MarkerSize', 10);
 
 handles.M  = [X' Y' Z'];
 handles.CL = 'b';
