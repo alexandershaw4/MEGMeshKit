@@ -1,7 +1,7 @@
-function tmap = contrastmesh(D,t1,t2,T)
+function tmap = contrastmesh(DD,t1,t2,T)
 % constrast conditions from mesh vertices using t-stat
 %
-% D  = SPM12 MEEG object [source localised]
+% DD = SPM12 MEEG objects [source localised]
 % t1 = trial type 1 (to contrast with..)
 % t2 = trial type 2
 % T  = window of interest 
@@ -10,98 +10,75 @@ function tmap = contrastmesh(D,t1,t2,T)
 
 if nargin < 5; foi = []; else foi = F; end
 if nargin < 4; woi = []; else woi = T; end
+if ~isobject(DD{1}); DD = loadarrayspm(DD); end
+
+D = DD{1};
 
 if isempty(woi); woi = [D.time(1) D.time(end)]; end
 js = 1:size(D.inv{end}.inverse.M,1);
 
-for i = 1:length(js)
-     tmp = GetSS(D,js(i));
-     SS(i,:,:) = full(tmp);
+% Get projections
+for s = 1:length(DD)
+    D = DD{s};
+    out = rebuild(D,woi,'evoked',[]);
+    JW(s,:) = out.JW;
 end
 
-% extract [averaged] trials of interest
-T1   = squeeze(SS(:,:,t1));
-T2   = squeeze(SS(:,:,t2));
+if ischar(t1);
+    L     = D.condlist;
+    this1 = strmatch(t1,L);
+elseif isnumeric(t1)
+    this1 = t1;
+end
+fprintf('Found %d trial types for condition 1\n',length(this1));
 
-% woi
-time = D.time;
-ti   = [findthenearest(woi(1),time):findthenearest(woi(2),time)];
-T1   = T1(:,ti);
-T2   = T2(:,ti);
+if ischar(t2)
+    L     = D.condlist;
+    this2 = strmatch(t2,L);
+elseif isnumeric(t2)
+    this2 = t2;
+end    
+fprintf('Found %d trial types for condition 2\n',length(this2));
+
+% Get relevant projections
+J1 = JW(:,this1);
+J2 = JW(:,this2);
+J1 = squeeze(inner(J1));
+J2 = squeeze(inner(J2));
+
+% Average this trial types
+J1 = squeeze(mean(J1,2));
+J2 = squeeze(mean(J2,2));
+
 
 % t-tests
-for s = 1:size(T1,1)
-    [H(s,:),P(s,:),CI,ST] = ttest(T1(s,:),T2(s,:));
-    Tst(s,:) = ST.tstat;
+for s = 1:size(J1,2)
+    if s > 1; fprintf(repmat('\b',size(str))); end
+    str = sprintf('Computing %d of %d',s,size(J1,2));
+    fprintf(str);
+    
+    [H(s,:),P(s,:),CI,ST] = ttest(J1(:,s),J2(:,s));
+    Tst(:,s) = ST.tstat;
 end
+
+
+tmap = Tst;
 
 % do plot
-tmap = Tst;
-figure,
-vert = D.inv{end}.forward(end).mesh.vert;
-face = D.inv{end}.forward(end).mesh.face;
-x = vert(:,1);
-y = vert(:,2);
-z = vert(:,3);
-%b = HighResMeanFilt(tmap,1,2);
-
-Brain = trisurf(face,x,y,z,tmap,'EdgeColor','none');
-alpha(.7); grid off;set(gca,'visible','off');
-colorbar
+% tmap = Tst;
+% figure,
+% vert = D.inv{end}.forward(end).mesh.vert;
+% face = D.inv{end}.forward(end).mesh.face;
+% x = vert(:,1);
+% y = vert(:,2);
+% z = vert(:,3);
+% %b = HighResMeanFilt(tmap,1,2);
+% 
+% Brain = trisurf(face,x,y,z,tmap,'EdgeColor','none');
+% alpha(.7); grid off;set(gca,'visible','off');
+% colorbar
 end
 
-function SS = GetSS(D,js)
-% Convert from D(sens ,samps,trials)
-%         to   D(verts,samps,trials)
-
-inv     = D.inv{end};
-%js      = 1:length(inv.inverse.M);
-scale   = inv.inverse.scale;
-J       = inv.inverse.J;  
-U       = inv.inverse.U; % spatial projector 
-T       = inv.inverse.T; %
-TT      = T*T';
-M       = inv.inverse.M(js, :);
-Ic      = inv.inverse.Ic;
-It      = inv.inverse.It;
-Np      = length(It);
-trial   = D.condlist;
-clabell = {};
-
-for i = 1:numel(trial)
-    c       = D.indtrial(trial{i}, 'GOOD');
-    clabell = [clabell D.conditions(c)];
-    
-    Nt    = length(c);
-    fprintf('reconstructing trial type %d\n',i);
-    
-    for j = 1:Nt
-        for k = 1:length(U)
-            Y       = D(Ic{k},It,c(j));
-            UY{k,1} = U{k}*Y*scale(k);
-        end
-        Y = spm_cat(UY);
-        
-        if j > 1
-            %MY{i} = MY{i} + M*Y;
-            %MY{i}(:,c(j)) = mean(M*Y,1);
-            MY(:,c(j)) = mean(M*Y,1);
-        else
-            %MY{i} = mean(M*Y,1);
-            %MY{i}(:,c(j)) = mean(M*Y,1);
-            MY(:,c(j)) = mean(M*Y,1);
-        end
-    end
-    %MY{i} = MY{i} / j;
-end
-
-
-%MY = squeeze(inner(MY));
-%SS = permute(MY,[3 2 1]);
-%SS =        (mean(SS,1));
-
-SS = MY;
-end
 
 
 
