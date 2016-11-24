@@ -12,7 +12,7 @@ function varargout = VSExtractor_gui(varargin)
 %
 % AS2016
 
-% Last Modified by GUIDE v2.5 17-Nov-2016 17:29:10
+% Last Modified by GUIDE v2.5 24-Nov-2016 11:32:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -148,7 +148,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
     
     if ~iscell(G); G = {G}; end
     
-    if strcmp(G{:},'datasets.mat')
+    if length(G)==1 && strcmp(G{:},'datasets.mat')
         
         % specify cell array of full paths
         G = load(G{:});
@@ -465,6 +465,8 @@ try handles = rmfield(handles,'CL');end
 try handles = rmfield(handles,'orig'); end
 try handles = rmfield(handles,'t'); end
 
+clearvars -global
+
 clc;
 cla();
 % Save the handles structure.
@@ -512,3 +514,88 @@ function pushbutton12_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 cla();
+
+
+% --- Executes on slider movement.
+function slider2_Callback(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+% thresholding slider
+v = get(hObject,'Value');% * ( get(hObject,'Min') / get(hObject,'Max') );
+
+global thr 
+thr = v;
+
+cla();
+pushbutton1_Callback(hObject, eventdata, handles);
+
+% Save the handles structure.
+guidata(hObject,handles); 
+
+
+
+% --- Executes during object creation, after setting all properties.
+function slider2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in radiobutton2.
+function radiobutton2_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton2
+
+% blankify button
+onoff = get(hObject,'Value');
+
+global trs
+trs = onoff;
+
+% Save the handles structure.
+guidata(hObject,handles); 
+
+
+% --- Executes on slider movement.
+function slider3_Callback(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+level = get(hObject,'Value'); 
+
+global trs
+trs = level;
+
+cla();
+pushbutton1_Callback(hObject, eventdata, handles);
+
+
+
+
+
+% --- Executes during object creation, after setting all properties.
+function slider3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
