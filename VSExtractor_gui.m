@@ -16,7 +16,7 @@ function varargout = VSExtractor_gui(varargin)
 %
 % AS2016
 
-% Last Modified by GUIDE v2.5 24-Nov-2016 11:32:56
+% Last Modified by GUIDE v2.5 24-Nov-2016 14:03:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -79,7 +79,11 @@ if isfield(handles,'trans');trans= handles.trans;else trans= []; end
 
 f = handles.G;
 
-axes(handles.axes1);
+try   set(0, 'CurrentFigure', handles.figure2);
+      axes(handles.axes2);
+catch axes(handles.axes1);
+end
+
 plotmesh_fo_grp(f,M,t,woi,foi,type,CL,trans);
 h=rotate3d;
 set(h,'Enable','on');
@@ -630,3 +634,28 @@ function slider3_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in pushbutton13.
+function pushbutton13_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% save export image
+opts.Interpreter =  'tex';
+fname = inputdlg('Enter savename','',6,{'file.png'},opts);
+
+% new figure, same axes [picked preferntially by gui]
+handles.figure2=figure(1);
+handles.axes2 = axes;
+pushbutton1_Callback(hObject, eventdata, handles);
+
+% get view options from gui
+pos = get(handles.axes1);
+set(handles.axes2,'View',pos.View);
+
+print(handles.figure2,fname{:},'-dpng','-r600');
+
+handles = rmfield(handles,'figure2');
+set(0, 'CurrentFigure', handles.figure1);
