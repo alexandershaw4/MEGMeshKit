@@ -3,7 +3,7 @@ function plotmesh_fo_tmap(D,tmap,thr,trs,trans)
 % from source localised SPM MEEG object
 %
 % tmap - from contrast
-% thr  - threshold for overlay
+% thr  - threshold for overlay [e.g. critical t val]
 % trs  - blanking values [remove colour in overlay]
 % trans - transparency
 %
@@ -54,14 +54,19 @@ if ~isempty(thr);
     tmap(tmap<thr) = 0;
 end
 
-% enable blanking of overlay
+% enable blanking of overlay at crit t [trs]
 if ~isempty(trs);
     cmap = jet();
-    % Make values 0-5 black:
-    %cmap(1:6,:) = zeros(6,3)+.4;
-    sz = length(cmap);
-    sz = round(sz*(.5*trs));
-    cmap(1:sz,:)=zeros(sz,3)+.4;
+    tm   = max(tmap);
+    
+    % Make values 0-5 gray:
+    sz  = length(cmap);
+    sz  = round(sz*(.5));    
+    mid = sz;
+    sz  = ceil(sz/tm*trs);
+    
+    zs  = zeros(size(cmap(mid-sz:mid+sz,:)));
+    cmap(mid-sz:mid+sz,:)=zs+.4;
     colormap(cmap);
 end
 

@@ -54,9 +54,10 @@ J1 = squeeze(inner(J1));
 J2 = squeeze(inner(J2));
 
 % Average this trial types
-J1 = squeeze(mean(J1,2));
-J2 = squeeze(mean(J2,2));
-
+if ndims(J1) > 2
+    J1 = squeeze(mean(J1,2));
+    J2 = squeeze(mean(J2,2));
+end
 
 % t-tests
 for s = 1:size(J1,2)

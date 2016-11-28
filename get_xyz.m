@@ -1,34 +1,27 @@
-function [x,y,z] = get_xyz(n)
+function [x,y,z] = get_xyz(n,f)
 
 try n ; catch n = 1; end
 
-%state = uisuspend(gcf);
-%set(gcf,'Pointer','fullcross')
+if ischar(f); f = spm_eeg_load(f); end
 
-for i=1:n
-    
-    rotate3d off;
-    datacursormode on;
-    waitforbuttonpress
-    
-    % get the closest vertex
-    coord = get(gca, 'CurrentPoint');
+rotate3d off;
+datacursormode on;
+waitforbuttonpress
+
+% get the closest vertex
+for i = 1:n
+    vert        = f.inv{end}.forward(end).mesh.vert(f.inv{end}.inverse.Is,:);
+    coord       = get(gca, 'CurrentPoint');
+    dist        = sum((vert - repmat(coord(1, :), size(vert, 1), 1)).^2, 2);
+    [junk, ind] = min(dist);
+    coord       = vert(ind, :);
     
     % retain per pos
-    nx(i) = coord(1);
-    ny(i) = coord(2);
-    nz(i) = coord(3);
-    
-    datacursormode off;
-    rotate3d on;
-
-    % record click at peak:
-    x(i,:) = c_info.Position(1);
-    y(i,:) = c_info.Position(2);
-    z(i,:) = c_info.Position(3);
-
+    x(i) = coord(1);
+    y(i) = coord(2);
+    z(i) = coord(3);
 end
 
-%uirestore(state);
-set(gcf,'Pointer','arrow')
-refresh
+datacursormode off;
+rotate3d on;
+
