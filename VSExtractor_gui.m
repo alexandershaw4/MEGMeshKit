@@ -10,8 +10,8 @@ function varargout = VSExtractor_gui(varargin)
 % and can export the individuals extracted data either to the matlab
 % workspace or into a new n-channel LFP spm file.
 %
+% Also perform t-contrast between conditions  
 %
-% *currently can only do 1 virtual sensor location at a time
 % see also Click_to_extract_sensors for script version
 %
 % AS2016
