@@ -68,9 +68,8 @@ end
 
 trisurf(face,x,y,z,tmap); 
 alpha(trans)
-
-%set(h,'EdgeColor','interp')
-%set(h,'FaceVertexCData',tmap);
+set(h,'EdgeColor','interp')
+set(h,'FaceVertexCData',tmap);
 shading interp
 camlight headlight
 

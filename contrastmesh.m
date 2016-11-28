@@ -1,4 +1,4 @@
-function tmap = contrastmesh(DD,t1,t2,T)
+function tmap = contrastmesh(DD,t1,t2,T,F)
 % constrast conditions from mesh vertices using t-stat
 %
 % DD = SPM12 MEEG objects [source localised]
@@ -47,9 +47,12 @@ J1 = squeeze(inner(J1));
 J2 = squeeze(inner(J2));
 
 % Average this trial types
-J1 = squeeze(mean(J1,2));
-J2 = squeeze(mean(J2,2));
-
+if ndims(J1) > 2
+    J1 = squeeze(mean(J1,2));
+    J2 = squeeze(mean(J2,2));
+else
+    
+end
 
 % t-tests
 for s = 1:size(J1,2)

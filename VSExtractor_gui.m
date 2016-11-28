@@ -16,7 +16,7 @@ function varargout = VSExtractor_gui(varargin)
 %
 % AS2016
 
-% Last Modified by GUIDE v2.5 24-Nov-2016 14:03:56
+% Last Modified by GUIDE v2.5 28-Nov-2016 09:44:25
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -659,3 +659,16 @@ print(handles.figure2,fname{:},'-dpng','-r600');
 
 handles = rmfield(handles,'figure2');
 set(0, 'CurrentFigure', handles.figure1);
+
+
+% --- Executes on button press in pushbutton14.
+function pushbutton14_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton14 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% spawn new gui
+guihand = handles;
+global guihand
+
+contrast_gui
