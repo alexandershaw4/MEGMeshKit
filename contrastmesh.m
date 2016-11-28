@@ -12,6 +12,8 @@ if nargin < 5; foi = []; else foi = F; end
 if nargin < 4; woi = []; else woi = T; end
 if ~isobject(DD{1}); DD = loadarrayspm(DD); end
 
+type = 'induced';
+
 D = DD{1};
 
 if isempty(woi); woi = [D.time(1) D.time(end)]; end
@@ -20,7 +22,12 @@ js = 1:size(D.inv{end}.inverse.M,1);
 % Get projections
 for s = 1:length(DD)
     D = DD{s};
-    out = rebuild(D,woi,'evoked',[]);
+    switch type
+        case 'evoked'
+            out = rebuild(D,woi,'evoked',foi);
+        case 'induced';
+            out = rebuild(D,woi,'induced',foi);
+    end
     JW(s,:) = out.JW;
 end
 
@@ -47,12 +54,9 @@ J1 = squeeze(inner(J1));
 J2 = squeeze(inner(J2));
 
 % Average this trial types
-if ndims(J1) > 2
-    J1 = squeeze(mean(J1,2));
-    J2 = squeeze(mean(J2,2));
-else
-    
-end
+J1 = squeeze(mean(J1,2));
+J2 = squeeze(mean(J2,2));
+
 
 % t-tests
 for s = 1:size(J1,2)
@@ -63,7 +67,7 @@ for s = 1:size(J1,2)
     [H(s,:),P(s,:),CI,ST] = ttest(J1(:,s),J2(:,s));
     Tst(:,s) = ST.tstat;
 end
-
+fprintf('\n');
 
 tmap = Tst;
 
