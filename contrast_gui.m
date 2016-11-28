@@ -1,24 +1,10 @@
 function varargout = contrast_gui(varargin)
-% CONTRAST_GUI MATLAB code for contrast_gui.fig
-%      CONTRAST_GUI, by itself, creates a new CONTRAST_GUI or raises the existing
-%      singleton*.
+% t-Contrast sub-gui for VSExtractor_gui
 %
-%      H = CONTRAST_GUI returns the handle to a new CONTRAST_GUI or the handle to
-%      the existing singleton*.
 %
-%      CONTRAST_GUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in CONTRAST_GUI.M with the given input arguments.
 %
-%      CONTRAST_GUI('Property','Value',...) creates a new CONTRAST_GUI or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before contrast_gui_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to contrast_gui_OpeningFcn via varargin.
 %
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
+% AS2016
 
 % Edit the above text to modify the response to help contrast_gui
 
