@@ -2,9 +2,13 @@ function [dD,C,T,XYZ,FT] = MNI2TS(D,MNI,rad)
 % From a source localised MEEG object, extract timeseries from MNI
 % coordinates
 %
+% Inputs
+%
 % D   = SPM MEEG object
 % MNI = [nx3] MNI coordinates
 % rad = radius to search around MNI coords
+%
+% Outputs
 %
 % dD  = 3D double dD(source x samples x conditions) where nsource is nMNI
 % C   = condition list

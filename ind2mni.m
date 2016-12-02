@@ -1,4 +1,8 @@
 function [x,y,z] = ind2mni(D,ox,oy,oz)
+% obsolete
+%
+%
+%
 
 if ~isobject(D); D = spm_eeg_load(D); end
 

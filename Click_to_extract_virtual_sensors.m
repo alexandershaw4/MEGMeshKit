@@ -13,15 +13,15 @@ f = dir('ica_*.mat'); f = {f.name}';
 t = 1;               % trial / condition number
 r = 5;               % radius to search
 
-M = [...             % MMN MNI regions to project for guidance
-   -46    20     8;  % These from Garrido 2008 / Phillips 2015
-   -61   -32     8;
-   -42   -14     7;
-    46    20     8;
-    59   -25     8;
-    46   -14     8];
-
-M = [-7 -103 -4]; %  this ~ V1
+% M = [...             % MMN MNI regions to project for guidance
+%    -46    20     8;  % These from Garrido 2008 / Phillips 2015
+%    -61   -32     8;
+%    -42   -14     7;
+%     46    20     8;
+%     59   -25     8;
+%     46   -14     8];
+% 
+% M = [-7 -103 -4]; %  this ~ V1
 
 
 woi  = [];

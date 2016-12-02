@@ -1,5 +1,6 @@
 function varargout = VSExtractor_gui(varargin)
-% An interactive plotting tool for extracting timeseries from a specific
+% An interactive plotting tool for visualising source localisations, 
+% performing t-contrasts on mesh and extracting timeseries from a specific
 % source location in source localised MEEG SPM datasets.
 %
 % Select either a set of spm meeg datasets or a mat file containing a cell
@@ -10,13 +11,25 @@ function varargout = VSExtractor_gui(varargin)
 % and can export the individuals extracted data either to the matlab
 % workspace or into a new n-channel LFP spm file.
 %
-% Also perform t-contrast between conditions  
+% Also perform t-contrast between conditions
 %
+% Includes plot options for:
+% - transparency of overlay
+% - inflate glass brain
+% - smoothing
+% - 'blanking' threshold [i.e. value where colours disappear]
+% - threshold [for making t(+/- n) = 0]
+% - saving high resolution png / tif
+% - projecting MNI coordinates onto brain [with overlay]
+% - crosshair capture & export of LFP from click location
+% - contrast gui, for t-contrasts between conditions at specific time and freq
+% - support to run multiple contrasts and subplot figure, with linked rotation
+% 
 % see also Click_to_extract_sensors for script version
 %
 % AS2016
 
-% Last Modified by GUIDE v2.5 28-Nov-2016 09:44:25
+% Last Modified by GUIDE v2.5 30-Nov-2016 10:54:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -180,7 +193,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
             handles.G{i,:} = GG{i}; % append paths
         end
     end
-    
+clearvars -global   
 set(gca,'visible','off');
 
 % Save the handles structure.
@@ -290,8 +303,9 @@ datacursormode off;
 rotate3d on;
 
 hold on
-plot3(coord(1), coord(2), coord(3), 'rv', 'MarkerSize', 10);
-
+for i = 1:length(nx)
+    plot3(nx(i), ny(i), nz(i), 'rv', 'MarkerSize', 10);
+end
 
 % Do conversion to verts per person
 %----------------------------------------------
@@ -500,7 +514,10 @@ try handles = rmfield(handles,'CL');end
 try handles = rmfield(handles,'orig'); end
 try handles = rmfield(handles,'t'); end
 
+global guihand
+guihand = [];
 clearvars -global
+
 
 clc;
 cla();
@@ -672,3 +689,55 @@ guihand = handles;
 global guihand
 
 contrast_gui
+
+
+% --- Executes on slider movement.
+function slider4_Callback(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+global flt
+flt = 4*get(hObject,'Value'); 
+cla();
+pushbutton1_Callback(hObject, eventdata, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function slider4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider5_Callback(hObject, eventdata, handles)
+% hObject    handle to slider5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+global inflate
+inflate = get(hObject,'Value'); 
+cla();
+pushbutton1_Callback(hObject, eventdata, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function slider5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end

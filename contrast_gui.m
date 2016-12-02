@@ -8,7 +8,7 @@ function varargout = contrast_gui(varargin)
 
 % Edit the above text to modify the response to help contrast_gui
 
-% Last Modified by GUIDE v2.5 28-Nov-2016 09:41:09
+% Last Modified by GUIDE v2.5 30-Nov-2016 15:48:35
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -40,6 +40,11 @@ function contrast_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for contrast_gui
 handles.output = hObject;
+
+global guihand
+set(handles.popupmenu1, 'String', guihand.G{1}.condlist);
+set(handles.popupmenu2, 'String', guihand.G{1}.condlist);
+
 
 % Update handles structure
 guidata(hObject, handles);
@@ -107,6 +112,7 @@ function edit1_Callback(hObject, eventdata, handles)
 
 % string conition 1:
 handles.T1 = get(hObject,'String');
+
 % Save the handles structure.
 guidata(hObject,handles); 
 
@@ -173,6 +179,7 @@ function edit2_Callback(hObject, eventdata, handles)
 
 % string condition 2:
 handles.T2 = get(hObject,'String');
+
 % Save the handles structure.
 guidata(hObject,handles); 
 
@@ -203,6 +210,7 @@ function edit4_Callback(hObject, eventdata, handles)
 woi = (get(hObject,'String'));
 woi = str2num(woi);
 handles.woi = woi;
+
 % Save the handles structure.
 guidata(hObject,handles); 
 
@@ -234,6 +242,7 @@ function edit5_Callback(hObject, eventdata, handles)
 foi = (get(hObject,'String'));
 foi = str2num(foi);
 handles.foi = foi;
+
 % Save the handles structure.
 guidata(hObject,handles); 
 
@@ -266,16 +275,132 @@ T2  = handles.T2;
 try toi = handles.woi; catch; toi = []; end
 try foi = handles.foi; catch; foi = []; end
 
-tmap = contrastmesh(G,T1,T2,toi,foi);
+fprintf('Trying to compute t-contrasts...\n');
 
-% switch to VSExtractor_gui figure axes
-%----------------------------------------
-set(0, 'CurrentFigure', guihand.figure1)
-axes(guihand.axes1);
+if iscell(T1) && length(T1) > 1;
+    % we are running multiple contrasts
+    if length(T1) ~= length(T2);
+        error('Must specify contrasts pairs!');
+    end
+    
+    for k = 1:length(T1)
+        fprintf('Running contrast %d of %d\n',k,length(T1));
+        tmap{k} = contrastmesh(G,T1{k},T2{k},toi,foi);
+    end
+    if isfield(guihand,'trans');trans= guihand.trans;else trans= []; end
+    
+    global ConPlot
+    ConPlot.trans = trans;
+    ConPlot.nc    = length(T1);
+    ConPlot.G = G{1};
+    ConPlot.tmap = tmap;
+    
+    contrast_plot_gui
+    
+%     % new figure but to inherit plot settings
+%     ch = figure(1);
+%     nc = length(T1);
+%     if isfield(guihand,'trans');trans= guihand.trans;else trans= []; end
+%     global thr
+%     global trs
+%     
+%     for k = 1:nc
+%         % t ->
+%         subplot(2,nc,k), plotmesh_fo_tmap(G{1},tmap{k},thr,trs,trans);
+%         % t <-
+%         subplot(2,nc,k+nc),plotmesh_fo_tmap(G{1},tmap{k}*-1,thr,trs,trans);
+%     end
+%     ac = allchild(ch);
+%     linksubplots(ac);
+    
+else
+    % we are running only 1 contrast
+    tmap = contrastmesh(G,T1,T2,toi,foi);
+    
+    if ~isempty(tmap)
+        
+        % switch to VSExtractor_gui figure axes
+        %----------------------------------------
+        set(0, 'CurrentFigure', guihand.figure1)
+        axes(guihand.axes1);
+        
+        if isfield(guihand,'trans');trans= guihand.trans;else trans= []; end
+        global thr
+        global trs
+        
+        plotmesh_fo_tmap(G{1},tmap,thr,trs,trans)
+        
+    end
+end
 
-if isfield(guihand,'trans');trans= guihand.trans;else trans= []; end
-global thr
-global trs
+% --- Executes on button press in pushbutton3.
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.T1 = [];
+handles.T2 = [];
 
-plotmesh_fo_tmap(G{1},tmap,thr,trs,trans)
+% Save the handles structure.
+guidata(hObject,handles); 
 
+
+
+function edit6_Callback(hObject, eventdata, handles)
+% hObject    handle to edit6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit6 as text
+%        str2double(get(hObject,'String')) returns contents of edit6 as a double
+
+% List t(1)s
+T1 = get(hObject,'String');
+handles.T1 = cellstr(T1);
+
+
+% Save the handles structure.
+guidata(hObject,handles); 
+
+
+% --- Executes during object creation, after setting all properties.
+function edit6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit7_Callback(hObject, eventdata, handles)
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit7 as text
+%        str2double(get(hObject,'String')) returns contents of edit7 as a double
+
+% List t(2)s
+T2 = get(hObject,'String');
+handles.T2 = cellstr(T2);
+
+% Save the handles structure.
+guidata(hObject,handles); 
+
+
+% --- Executes during object creation, after setting all properties.
+function edit7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

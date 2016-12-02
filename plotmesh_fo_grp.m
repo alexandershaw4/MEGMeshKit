@@ -4,7 +4,7 @@ function plotmesh_fo_grp(D,o,t,woi,foi,type,CL,trans)
 %
 % D is a cell array of subjects' D filenames
 % o is a optional MNI coords to project [n x 3]     [optional]
-% t is trial(s) types [conditions] to include - e.g. 1 or [1 5 6]
+% t is trial(s) types [conditions] to include - e.g. 1 or [1 5 6] or 'On'
 %
 % woi  is time window of interest                   [optional]
 % foi  is freq window of interest                   [optional]
@@ -34,6 +34,9 @@ warning off %
 global subnorm
 global thr
 global trs
+global flt
+global npca
+global inflate
 
 % verts & faces for brain
 %---------------------------------------------------------
@@ -42,6 +45,29 @@ x     = vert(:,1);
 y     = vert(:,2);
 z     = vert(:,3);
 face  = D{1}.inv{end}.forward(end).mesh.face;
+
+
+% fix unspecified parameters
+if isempty(woi);   woi   = [0 .3]; end
+if isempty(type);  type  = 'evoked'; end
+if isempty(trans); trans = .4; end
+if isempty(subnorm); subnorm = []; end
+if isempty(flt);    flt = []; end
+if isempty(npca);   npca = []; end
+if isempty(inflate);inflate = [];end
+
+
+% enable inflation
+if ~isempty(inflate) 
+    face = double(face);
+    if inflate == 0 ; inflate = 0.02; end
+    fprintf('inflating...\n');
+    vert = vsmooth([x y z], face, inflate);
+    fprintf('done\n');
+    x = vert(:,1);
+    y = vert(:,2);
+    z = vert(:,3);
+end
 
 % glass brain
 %---------------------------------------------------------
@@ -60,11 +86,6 @@ set(gca,'visible','off');
 set(gcf,'inverthardcopy','off');
 hold on;
 
-% fix unspecified parameters
-if isempty(woi);   woi   = [0 .3]; end
-if isempty(type);  type  = 'evoked'; end
-if isempty(trans); trans = .4; end
-if isempty(subnorm); subnorm = []; end
 
 % call function for projecting into source space
 %---------------------------------------------------------
@@ -130,12 +151,29 @@ if ~iscell(st);
         fprintf('normalising subjects prior to averaging using %s\n',func2str(subnorm.f));
         %st = TSNorm(st',6,1,1)';
         st = feval(subnorm.f,st',subnorm.type,subnorm.range)';
+    elseif ~isempty(flt)
+        if any(size(st)==1);
+             st  = HighResMeanFilt(diag(st),1,round(flt));
+             st  = diag(st)';
+        else st  = HighResMeanFilt(st,1,round(flt));
+        end
     end
     mst = mean(st,1);
+    
+elseif ~isempty(flt)
+    st  = HighResMeanFilt(st,1,round(flt));
+    mst = squeeze(cat(2,st{:}));
+    mst = mean(mst,2);
 else
     mst = squeeze(cat(2,st{:}));
     mst = mean(mst,2);
 end
+
+% enable pca
+if ~isempty(npca)
+    mst = PEig(mst',npca)';
+end
+
 
 % enable thresholding [slider]
 if ~isempty(thr);

@@ -1,6 +1,6 @@
 function o = loadarrayspm(in)
-% Same as loadarray.m but for dcm models.
-% Loads a cell array of file names into array of structures.
+% Same as loadarray.m but for spm datafiles.
+% Loads a cell array of file names (in) into array of structures (o).
 % AS2016 [util]
 
 try in = {in.name}; end     % in case of input from 'dir'

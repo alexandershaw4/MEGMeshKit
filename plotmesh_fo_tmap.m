@@ -1,6 +1,6 @@
 function plotmesh_fo_tmap(D,tmap,thr,trs,trans)
 % Plot glass mesh brain with MNI coordinates marked
-% from source localised SPM MEEG object
+% from source localised SPM12 MEEG object
 %
 % tmap - from contrast
 % thr  - threshold for overlay [e.g. critical t val]
@@ -18,8 +18,11 @@ CL    = 'r'; % colour of MNI patch
 try CC;   catch;CL    = 'r'; end
 try trans;catch;trans = .4; end; if isempty(trans); trans=.4; end
 
-global thr
-global trs
+warning off
+if isempty(thr); global thr ; end
+if isempty(trs); global trs ; end
+global flt
+global inflate
 
 % verts & faces for brain
 %---------------------------------------------------------
@@ -28,6 +31,26 @@ x     = vert(:,1);
 y     = vert(:,2);
 z     = vert(:,3);
 face  = D.inv{end}.forward(end).mesh.face;
+
+% fix unspecified params
+if isempty(flt);    flt = []; end
+if isempty(inflate);inflate = [];end
+
+
+% enable inflation
+if ~isempty(inflate) 
+    face = double(face);
+    if inflate == 0 ; inflate = 0.02; end
+    if inflate ~= 1;
+        fprintf('inflating...\n');
+        vert = vsmooth([x y z], face, inflate);
+        fprintf('done\n');
+        x = vert(:,1);
+        y = vert(:,2);
+        z = vert(:,3);
+    end
+end
+
 
 % glass brain
 %---------------------------------------------------------

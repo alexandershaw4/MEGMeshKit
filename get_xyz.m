@@ -1,4 +1,10 @@
 function [x,y,z] = get_xyz(n,f)
+% Capture x y z coordinates from crosshair click
+%
+%
+%
+%
+% AS
 
 try n ; catch n = 1; end
 
