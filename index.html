@@ -31,14 +31,16 @@
         <h3>
 <a id="what-is-it" class="anchor" href="#what-is-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is it?</h3>
 
-<p>It's a set of matlab functions [with a simple gui] for plotting source localised SPM12 MEEG data on meshes at group level, identifying peaks and extracting relevant timeseries. Performing t-contrasts between conditions and visualisation.</p>
+<p>It's a matlab 'toolbox' [gui + functions] for plotting group level SPM12 M/EEG datasets. Load up a bunch of SPM datasets and plot specific conditions (averaged over group), optionally with reference MNI coordinates projected onto the mesh. Visualisation options include thresholding, inflation and alpha. Export high res images. Plot specific conditions, or type in part of the condition name to find all matching and average them all (e.g. if I have conditions 'Face_1','Face_2' ... 'Face_n', then type 'Face' to partial string match and plot the average overlay to all faces). </p>
 
-<p><img src="https://s13.postimg.org/m1pd1jdav/Screen_Shot_2016_11_28_at_15_21_40.png" alt="Screenshot"></p>
+<p>Also runs t-contrasts between conditions - either select condition from dropdown or type in pairs of conditions to compute contrast for. Results can visualised in a sep window with linked-rotation and high res image output option.</p>
+
+<p><img src="https://s17.postimg.org/jccp6721b/Screen_Shot_2016_12_05_at_10_31_40.png" alt="Screenshot"></p>
 
 <h3>
 <a id="what-does-it-do" class="anchor" href="#what-does-it-do" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What does it do?</h3>
 
-<p>It loads up a template mesh and plots the group 'averaged' overlay for a given trial on top. From this, you can click an area of interest to find the coordinates of this 'peak'. There's a function that then finds each individual subjects' nearest source to that point [within a given radius]. You can then either reconstruct the data [time by trials] for the given identified vertices and store in a matrix, or call an spm built in function which extracts those vertices into a new LFP-SPM object for each individual dataset.</p>
+<p>It loads up an averaged mesh and plots the group averaged overlay for a given trial(s) on top. From this, you can click an area of interest to find the coordinates of this 'peak' for each subject [within a given radius]. You can then either reconstruct the data [time by trials] for the given identified vertices and store in a matrix, or call an spm built in function which extracts those vertices into a new LFP-SPM object for each individual dataset.</p>
 
 <h3>
 <a id="whyd-you-make-it" class="anchor" href="#whyd-you-make-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why'd you make it?</h3>
