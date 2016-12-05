@@ -39,7 +39,7 @@ js = 1:size(D.inv{end}.inverse.M,1);
 if size(DD,1) > 1;
      DD2 = DD(2,:);
      DD  = DD(1,:);
-     ttt = @ttest;
+     ttt = @ttest2;
 else ttt = @ttest;
 end
 
