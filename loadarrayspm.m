@@ -3,6 +3,8 @@ function o = loadarrayspm(in)
 % Loads a cell array of file names (in) into array of structures (o).
 % AS2016 [util]
 
+warning off
+
 try in = {in.name}; end     % in case of input from 'dir'
 if ~iscell(in); return; end % nope
 
