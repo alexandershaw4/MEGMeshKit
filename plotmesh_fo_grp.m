@@ -38,6 +38,8 @@ global flt
 global npca
 global inflate
 
+if thr == 0; thr = []; end
+
 % verts & faces for brain
 %---------------------------------------------------------
 vert  = D{1}.inv{end}.forward(end).mesh.vert;
@@ -72,7 +74,7 @@ end
 % glass brain
 %---------------------------------------------------------
 h = patch('faces',face,'vertices',[x(:) y(:) z(:)]);
-set(h,'FaceColor',[.4 .4 .4]);
+set(h,'FaceColor',[.3 .3 .3]);
 box off;
 grid off;
 %whitebg(1,'w'); 

@@ -581,7 +581,7 @@ function slider2_Callback(hObject, eventdata, handles)
 v = get(hObject,'Value');% * ( get(hObject,'Min') / get(hObject,'Max') );
 
 global thr 
-thr = v;
+thr = (1/64.^2)*v;
 
 cla();
 pushbutton1_Callback(hObject, eventdata, handles);

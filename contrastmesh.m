@@ -36,7 +36,7 @@ v = @spm_vec;
 if isempty(woi); woi = [D.time(1) D.time(end)]; end
 js = 1:size(D.inv{end}.inverse.M,1);
 
-if size(DD,1) > 1;
+if size(DD,1) > 1 && size(DD,2) > 1
      DD2 = DD(2,:);
      DD  = DD(1,:);
      ttt = @ttest2;
@@ -167,7 +167,16 @@ fprintf('Found %d trial types for condition 2\n',size(this2,2));
 
 
 % Get relevant projections
-J1 = JW(this1);
+if ~isvector(this1)
+    J1 = JW(this1);
+else
+    ATR = zeros(length(JW),length(L));
+    ATR(:,this1) = 1;
+    for i = 1:size(ATR,1)
+        J1(i,1) = JW(i,find(ATR(i,:)));
+    end  
+end
+
 if SepTime || exist('DD2','var')
     % if different wois or groups
      J2 = JW2(this2);
