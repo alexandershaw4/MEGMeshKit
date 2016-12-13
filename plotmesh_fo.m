@@ -74,7 +74,7 @@ elseif iscell(t)
         this      = find(strcmp(t{cond},L));
         it        = FO.JW{this};
         if cond == 1; st = [mean(it,2)*(1/length(t))];
-        else;         st = [mean(it,2)*(1/length(t))]' + st;
+        else;         st = [mean(it,2)*(1/length(t))] + st;
         end
     end
     
