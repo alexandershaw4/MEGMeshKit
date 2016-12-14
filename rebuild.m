@@ -1,4 +1,4 @@
-function out = rebuild(D,woi,type,foi)
+function out = rebuild(D,woi,type,foi,val)
 % Plot source reconstructed MEEG data from spm.
 %
 %
@@ -6,7 +6,9 @@ function out = rebuild(D,woi,type,foi)
 %
 % AS
 
-model = D.inv{1};
+try val; catch; val = 1; end
+
+model = D.inv{val};
 
 woi(:,1) = max(woi(:,1),model.inverse.woi(1));
 woi(:,2) = min(woi(:,2),model.inverse.woi(2));

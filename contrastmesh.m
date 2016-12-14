@@ -192,6 +192,28 @@ if ndims(J1) > 2
     J2 = squeeze(mean(J2,2));
 end
 
+% 
+m1_J1 = mean(J1,1);
+m2_J1 = mean(J1,2);
+
+J1  = J1 - repmat(m1_J1,[size(J1,1),1]);
+J1  = J1 - repmat(m2_J1,[1,size(J1,2)]);
+
+J1  = HighResMeanFilt(J1,1,4);
+J1  = J1 + repmat(m1_J1,[size(J1,1),1]);
+J1  = J1 + repmat(m2_J1,[1,size(J1,2)]);
+
+m1_J2 = mean(J2,1);
+m2_J2 = mean(J2,2);
+
+J2  = J2 - repmat(m1_J2,[size(J2,1),1]);
+J2  = J2 - repmat(m2_J2,[1,size(J2,2)]);
+
+J2  = HighResMeanFilt(J2,1,4);
+J2  = J2 + repmat(m1_J2,[size(J2,1),1]);
+J2  = J2 + repmat(m2_J2,[1,size(J2,2)]);
+
+
 % t-tests
 for s = 1:size(J1,2)
     if s > 1; fprintf(repmat('\b',size(str))); end
