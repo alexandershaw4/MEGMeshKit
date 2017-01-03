@@ -160,15 +160,26 @@ if ~iscell(st);
         else st  = HighResMeanFilt(st,1,round(flt));
         end
     end
-    mst = mean(st,1);
+    
+    % otherwise
+    %mst = mean(st,1);
+    %st  = smoother(st);
+    st  = spm_conv(st,1.5);
+    %mst = spm_robust_average(st);
+    
+    mst  = spm_robust_average(st);
+    %mst = spm_conv(st,1.5);
+    
     
 elseif ~isempty(flt)
     st  = HighResMeanFilt(st,1,round(flt));
     mst = squeeze(cat(2,st{:}));
-    mst = mean(mst,2);
+    %mst = mean(mst,2);
+    mst = spm_robust_average(st);
 else
     mst = squeeze(cat(2,st{:}));
-    mst = mean(mst,2);
+    %mst = mean(mst,2);
+    mst = spm_robust_average(st);
 end
 
 % enable pca
@@ -250,6 +261,40 @@ end
 
 end
 
+end
+
+function y = smoother(x)
+fprintf('Smoothing..\n');
+for s = 1:size(x,1)
+    np    = round(.2 * size(x,2) );
+    [v,i] = findpeaks(x(s,:),'SortStr','descend','NPeaks',np);
+    thr   = findthenearest(mean(v),v);
+    
+    v = v(thr:end);
+    i = i(thr:end);
+    
+    %v = v(1:thr);
+    %i = i(1:thr);
+    
+    %fprintf('smoothing %d peaks\n',length(i));
+    
+    for k = 1:length(i)
+        d       = x(s,:);
+        d(i(k)) = 0;
+        m       = mean(d);
+        
+        try        win = [ x(s,i(k)-1) x(s,i(k)+1) ];
+        catch try  win = [ m           x(s,i(k)+1) ];
+            catch  win = [ x(s,i(k)-1) m           ];
+            end
+        end
+            
+        x(s,i(k)) = mean(win);
+    end
+end
+y = x;
+end
+    
 
 
 

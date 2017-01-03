@@ -6,7 +6,7 @@ function out = rebuild(D,woi,type,foi,val)
 %
 % AS
 
-try val; catch; val = 1; end
+try val; catch; val = 1; end; if isempty(val); val = 1; end
 
 model = D.inv{val};
 

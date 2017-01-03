@@ -79,7 +79,8 @@ end
 
 % enable blanking of overlay at crit t [trs]
 if ~isempty(trs);
-    cmap = jet();
+    mapping = max(abs(tmap));
+    cmap = jet(length(tmap));
     tm   = max(tmap);
     
     % Make values 0-5 gray:
@@ -97,6 +98,7 @@ end
 trisurf(face,x,y,z,tmap); 
 alpha(trans)
 
+caxis([-mapping mapping]);
 %set(h,'EdgeColor','interp')
 %set(h,'FaceVertexCData',tmap);
 shading interp

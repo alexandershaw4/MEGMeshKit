@@ -1,4 +1,4 @@
-function tmap = contrastmesh(DD,t1,t2,T,F)
+function tmap = contrastmesh(DD,t1,t2,T,F,val)
 % constrast conditions from meshs using t-stat
 %
 % DD = SPM12 MEEG objects [source localised]
@@ -24,6 +24,7 @@ function tmap = contrastmesh(DD,t1,t2,T,F)
 % - evoked or induced
 % AS2016
 
+if nargin < 6; val = []; end
 if nargin < 5; foi = []; else foi = F; end
 if nargin < 4; woi = []; else woi = T; end
 if ~isobject(DD{1}); DD = loadarrayspm(DD); end
@@ -59,8 +60,8 @@ for s = 1:length(DD)
     if s == 1; fprintf('Fetching mesh projections; please wait...\n'); end
     D = DD{s};
     switch type
-        case 'evoked';  out = rebuild(D,woi,'evoked',foi);
-        case 'induced'; out = rebuild(D,woi,'induced',foi);
+        case 'evoked';  out = rebuild(D,woi,'evoked',foi,val);
+        case 'induced'; out = rebuild(D,woi,'induced',foi,val);
     end
     JW(s,:) = out.JW;
 end
@@ -179,7 +180,18 @@ end
 
 if SepTime || exist('DD2','var')
     % if different wois or groups
-     J2 = JW2(this2);
+    if ~isvector(this1)
+        %J1 = JW(this1);
+         J2 = JW2(this2);
+    else
+        ATR = zeros(length(JW),length(L));
+        ATR(:,this2) = 1;
+        for i = 1:size(ATR,1)
+            J2(i,1) = JW2(i,find(ATR(i,:)));
+        end  
+    end
+ 
+     %J2 = JW2(this2);
 else J2 = JW(this2);
 end
 
@@ -187,32 +199,26 @@ J1 = squeeze(inner(J1));
 J2 = squeeze(inner(J2));
 
 % Average this trial types
-if ndims(J1) > 2
+if ndims(J1) > 2 
     J1 = squeeze(mean(J1,2));
     J2 = squeeze(mean(J2,2));
 end
 
-% 
-% m1_J1 = mean(J1,1);
-% m2_J1 = mean(J1,2);
-% 
-% J1  = J1 - repmat(m1_J1,[size(J1,1),1]);
-% J1  = J1 - repmat(m2_J1,[1,size(J1,2)]);
-% 
-% J1  = HighResMeanFilt(J1,1,4);
-% J1  = J1 + repmat(m1_J1,[size(J1,1),1]);
-% J1  = J1 + repmat(m2_J1,[1,size(J1,2)]);
-% 
-% m1_J2 = mean(J2,1);
-% m2_J2 = mean(J2,2);
-% 
-% J2  = J2 - repmat(m1_J2,[size(J2,1),1]);
-% J2  = J2 - repmat(m2_J2,[1,size(J2,2)]);
-% 
-% J2  = HighResMeanFilt(J2,1,4);
-% J2  = J2 + repmat(m1_J2,[size(J2,1),1]);
-% J2  = J2 + repmat(m2_J2,[1,size(J2,2)]);
+J1 = smoother(J1);
+J2 = smoother(J2);
 
+J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
+J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
+J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
+J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
+J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
+J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
+J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
+J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
+
+
+J1 = abs(J1);
+J2 = abs(J2);
 
 % t-tests
 for s = 1:size(J1,2)
@@ -242,8 +248,94 @@ tmap = Tst;
 % colorbar
 end
 
+function o = clust(in,xyz);
+fprintf('Spatial smoothing (robust averaging)\n');
+A = spm_mesh_adjacency(xyz.face);
+N = spm_mesh_neighbours(A);
+N = moreN(N);
+
+mn = mean(in,1);
+L  = spm_mesh_get_lm(xyz.face,mn');
+
+% sort local maxima
+[thev,thein]=sort(mean(in(:,L),1),'descend');
+NBLOB = 12;
+L = L(thein(1:NBLOB));
+
+% N is a function: nearest neighbours of peak pos L(1) == N(L(1),:)
 
 
+% Align peaks
+for v = 1:length(L)
+    LR(v,:,:) = [in(:,L(1)) in(:,N(L(1),:))];
+end
+
+out = in;
+
+for s = 1:size(in,1)
+    for l = 1:length(L)
+        out(s,L(l)) = max(squeeze(LR(l,s,:)));
+    end
+end
+
+% Smooth all vertices
+for s = 1:size(in,1)
+    for i = 1:length(N)
+        out(s,i) = spm_robust_average( [out(s,i) out(s,N(i,:)) ]');
+    end
+end
+
+o = out;
+
+end
+
+function y = moreN(N)
+
+for v = 1:size(N,1)
+    colla = [];
+    for i = 1:6
+        t = N(v,i);
+        
+        colla = [colla N(t,:)];
+
+    end
+    NEW(v,:) = [N(v,:) colla];
+end
+
+y = NEW;
+end
+
+function y = smoother(x)
+fprintf('Smoothing..\n');
+for s = 1:size(x,1)
+    np    = round(.6 * size(x,2) );
+    [v,i] = findpeaks(x(s,:),'SortStr','descend','NPeaks',np);
+    thr   = findthenearest(mean(v),v);
+    
+    %v = v(thr:end);
+    %i = i(thr:end);
+    
+    v = v(1:thr);
+    i = i(1:thr);
+    
+    %fprintf('smoothing %d peaks\n',length(i));
+    
+    for k = 1:length(i)
+        d       = x(s,:);
+        d(i(k)) = 0;
+        m       = mean(d);
+        
+        try        win = [ x(s,i(k)-1) x(s,i(k)+1) ];
+        catch try  win = [ m           x(s,i(k)+1) ];
+            catch  win = [ x(s,i(k)-1) m           ];
+            end
+        end
+            
+        x(s,i(k)) = mean(win);
+    end
+end
+y = x;
+end
 
 function y = inner(x)
 
