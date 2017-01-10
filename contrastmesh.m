@@ -154,6 +154,7 @@ for s  = 1:length(DD)
         
     elseif isnumeric(t2)
         this2 = t2;
+        L = D.condlist;
     end
 end
 try this2 = squeeze(inner(this2));
@@ -172,9 +173,10 @@ if ~isvector(this1)
     J1 = JW(this1);
 else
     ATR = zeros(length(JW),length(L));
-    ATR(:,this1) = 1;
+    %ATR(:,this1) = 1;
     for i = 1:size(ATR,1)
-        J1(i,1) = JW(i,find(ATR(i,:)));
+        J1(i,1) = JW(i,this1(i));
+        %J1(i,1) = JW(i,find(ATR(i,:)));
     end  
 end
 
@@ -185,14 +187,25 @@ if SepTime || exist('DD2','var')
          J2 = JW2(this2);
     else
         ATR = zeros(length(JW),length(L));
-        ATR(:,this2) = 1;
+        %ATR(:,this2) = 1;
         for i = 1:size(ATR,1)
-            J2(i,1) = JW2(i,find(ATR(i,:)));
+            J2(i,1) = JW2(i,this2(i));
+            %J2(i,1) = JW2(i,find(ATR(i,:)));
         end  
     end
  
      %J2 = JW2(this2);
-else J2 = JW(this2);
+else
+    if ~isvector(this2)
+        J2 = JW(this2);
+    else
+        ATR = zeros(length(JW),length(L));
+        %ATR(:,this2) = 1;
+        for i = 1:size(ATR,1)
+            J2(i,1) = JW(i,this2(i));
+            %J2(i,1) = JW(i,find(ATR(i,:)));
+        end  
+    end        
 end
 
 J1 = squeeze(inner(J1));
@@ -204,8 +217,10 @@ if ndims(J1) > 2
     J2 = squeeze(mean(J2,2));
 end
 
-J1 = smoother(J1);
-J2 = smoother(J2);
+try
+    J1 = smoother(J1); 
+    J2 = smoother(J2); 
+end
 
 J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
 J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
@@ -278,6 +293,8 @@ for s = 1:size(in,1)
     end
 end
 
+N(find(N==0)) = 1;
+
 % Smooth all vertices
 for s = 1:size(in,1)
     for i = 1:length(N)
@@ -296,10 +313,16 @@ for v = 1:size(N,1)
     for i = 1:6
         t = N(v,i);
         
-        colla = [colla N(t,:)];
+        if t ~= 0            
+            colla = [colla N(t,:)];
+        end
 
     end
-    NEW(v,:) = [N(v,:) colla];
+    try   NEW(v,:) = [N(v,:) colla];
+    catch NEW(v,:) = ( NEW(v-1,:)*0 ) + N(v,i);
+          %NEW(v,:) = N(v,:)  
+    end
+
 end
 
 y = NEW;
