@@ -282,7 +282,7 @@ L = L(thein(1:NBLOB));
 
 % Align peaks
 for v = 1:length(L)
-    LR(v,:,:) = [in(:,L(1)) in(:,N(L(1),:))];
+    LR(v,:,:) = [in(:,L(v)) in(:,N(L(v),:))];
 end
 
 out = in;

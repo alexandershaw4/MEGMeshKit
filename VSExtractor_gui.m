@@ -293,6 +293,9 @@ for i = 1:npos
     [junk, ind] = min(dist);
     coord       = vert(ind, :);
     
+    nvert       = handles.G{1}.inv{end}.mesh.tess_mni.vert;
+    MNI         = nvert(ind,:);
+    
     % retain per pos
     nx(i) = coord(1);
     ny(i) = coord(2);
@@ -317,13 +320,15 @@ end
 %     end
 % end
 
-handles.capt.x = nx;
-handles.capt.y = ny;
-handles.capt.z = nz;
+% handles.capt.x = nx;
+% handles.capt.y = ny;
+% handles.capt.z = nz;
 
 handles.orig.x = nx;
 handles.orig.y = ny;
 handles.orig.z = nz;
+
+handles.MNI = MNI;
 
 
 % Save the handles structure.
