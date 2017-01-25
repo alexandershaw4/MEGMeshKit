@@ -224,12 +224,7 @@ end
 
 J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
 J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
-% J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
-% J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
-% J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
-% J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
-% J1 = clust((J1),DD{1}.inv{1}.forward.mesh);
-% J2 = clust((J2),DD{1}.inv{1}.forward.mesh);
+
 
 
 J1 = abs(J1);
