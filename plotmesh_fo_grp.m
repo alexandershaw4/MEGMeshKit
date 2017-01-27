@@ -237,7 +237,7 @@ set(h,'EdgeColor','interp')
 set(h,'FaceVertexCData',mst');
 shading interp
 axis tight
-caxis([-mapping mapping]);
+try caxis([-mapping mapping]); end
 %camlight headlight
 
 
