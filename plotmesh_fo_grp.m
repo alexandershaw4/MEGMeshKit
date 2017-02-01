@@ -12,6 +12,9 @@ function [mst,MNI] = plotmesh_fo_grp(D,o,t,woi,foi,type,CL,trans)
 % CL   is colour of projected MNI blobs             [optional]
 % trans is transparency of overlay                  [optional]
 %
+% Forms a radius for searching between between subjects for common peaks
+% Also uses robust averaging 
+%
 % AS2016
 
 % options
@@ -361,7 +364,7 @@ L = L(thein(1:NBLOB));
 
 
 % Align peaks
-fprintf('(e.) Aligning [peaks]\n');
+fprintf('(e.) Smoothing\n');
 for v = 1:length(L)
     LR(v,:,:) = [in(:,L(v)) in(:,N(L(v),:))];
 end
