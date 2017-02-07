@@ -35,7 +35,7 @@ All   = plotmesh_fo_grp(f,[],{'NeutralAll',...
 crit  = 5.5025e-06; % if using t-image, use a critical t on colbar
 alph  = .2;         % alpha value for overlay
 
-% New: optionally write these [group aves] gifti meshs:
+% New: optionally write these [group aves] g/nifti meshs:
 writeims(f{1},abs(All),'AllFcGam');
 
 
