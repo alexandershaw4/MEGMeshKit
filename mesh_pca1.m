@@ -4,11 +4,13 @@ function y = mesh_pca1(D,cond)
 % AS
 
 doplot = 0;       % plot 
-doimg  = 1;       % save images [g/nifti]
+doimg  = 0;       % save images [g/nifti]
 invi   = 1;       % inversion index (see D.val)
-%coni   = 1;      % condition index (see D.condlist)
 woi    = [0 .35]; % window of interest (secs)
-foi    = [];
+foi    = [];      % opt. foi [but reduces rank]
+k      = 8;       % smoothing kern size
+neig   = 20;      % num eigens 
+
 coni   = strmatch(cond,D.inv{1}.inverse.trials);
 
 %-----------------------------------------------
@@ -51,7 +53,7 @@ end
 
 wi    = [findthenearest(time,woi(1)*1000):findthenearest(time,woi(2)*1000)];
 TOI   = abs(wtime(:,wi));
-y     = reduce_eig_mesh(mesh,TOI,20,8);
+y     = reduce_eig_mesh(mesh,TOI,neig,k);
 
 
 if doimg
