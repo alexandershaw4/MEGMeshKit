@@ -29,6 +29,7 @@ Functions included
 - plotmesh_fo_grp_pca: applied above to group
 
 
+Click image for youtube video of group averaged movie.
 [![Mesh Vid](https://img.youtube.com/vi/l3z34g9Zogo/0.jpg)](https://www.youtube.com/watch?v=l3z34g9Zogo&feature=youtu.be)
 
 
