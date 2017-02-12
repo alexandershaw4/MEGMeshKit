@@ -1,0 +1,8 @@
+title: MNI2TS
+description: A utility for MEEG studies for identifying group-level activations, extracting relevant timeseries, performing t-contrasts & visualising.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
