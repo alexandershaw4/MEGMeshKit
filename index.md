@@ -9,7 +9,7 @@ Functions included
 - plotmesh: plot a mesh as above with MNI coords projcted on it and optional inflation
 - plotmeshfo: plot mesh patch with inflation, transparency & function overlay [vector] 
 - plotmesh_fo: as above but it find the overlay itself based on condition name or index of D.cond
-- plotmesh_fo_grp: as above but averages overlays of a set of objects [w/ sudo-inflation of common blobs]and returns them
+- plotmesh_fo_grp: as above but averages overlays of a set of objects and returns them
 - plotmesh_fo_tmap: plot mesh with a t-map overlay, thresholded at a critical-t
 - plotmeshfov: generate a mesh video from overlay matrix that is (nverts * ntime_pnts)
 
@@ -22,13 +22,14 @@ Functions included
 - gifti_inflator: inflate gifti object / mesh
 - contrastmesh: perform ttests between subjects mesh points [not very good, use spm]
 
+
 - loadarrayspm: from an array of spm meeg filenames, load the objects into an array
 - linksubplots: link the subplots of a figure so that they rotate together
 - reduce_eig_mesh: iteratively smooth mesh overlay until 90% variance explained by n-components
 - plotmesh_fo_grp_pca: applied above to group
 
 
-[![Mesh Vid](https://img.youtube.com/vi/VID/0.jpg)](https://www.youtube.com/watch?v=l3z34g9Zogo&feature=youtu.be)
+[![Mesh Vid](https://img.youtube.com/vi/l3z34g9Zogo/0.jpg)](https://www.youtube.com/watch?v=l3z34g9Zogo&feature=youtu.be)
 
 
 * may also require some functions in my 'misc' repo.
