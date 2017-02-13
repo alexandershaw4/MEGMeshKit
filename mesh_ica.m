@@ -3,7 +3,7 @@
 % AS
 
 doplot = 1;       % plot 
-doimg  = 1;       % save images [g/nifti]
+doimg  = 0;       % save images [g/nifti]
 invi   = 1;       % inversion index (see D.val)
 coni   = 1;       % condition index (see D.condlist)
 woi    = [0 .35]; % window of interest (secs)
@@ -33,10 +33,11 @@ wi    = [findthenearest(time,woi(1)*1000):findthenearest(time,woi(2)*1000)];
 TOI   = wtime(:,wi);
 
 [~,n]     = PEig90(TOI);              % prop energ > 90%
-[C, A, W] = fastica(TOI,'numOfIC',n); % ica
+[C, A, W] = fastica(TOI,'numOfIC',n+2); % ica
 
 nc = size(C,1);
 W  = pinv(W);
+
 
 for i = 1:nc
     this{i} = ( C(i,:)'*W(:,i)' )';   % spatio-temporal component projections
