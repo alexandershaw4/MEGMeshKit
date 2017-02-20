@@ -3,14 +3,13 @@ function [mst,st] = plotmesh_fo_grp_pca(D,t)
 % from source localised SPM MEEG objects
 %
 % D is a cell array of subjects' D filenames
-% o is a optional MNI coords to project [n x 3]     [optional]
 % t is trial(s) types [conditions] to include - e.g. 1 or [1 5 6] or 'On'
+%
+% See mesh_pca1.m for options including:
 %
 % woi  is time window of interest                   [optional]
 % foi  is freq window of interest                   [optional]
 % type is 'evoked' 'induced' or 'trials'            [optional]
-% CL   is colour of projected MNI blobs             [optional]
-% trans is transparency of overlay                  [optional]
 %
 % AS2016
 
@@ -57,6 +56,7 @@ end
 st  = spm_conv(st,1.5);
 
 
+% Experimental clustering [no]
 if robust_cluster
     st = clust(st,D{1}.inv{end}.forward(end).mesh);
 end

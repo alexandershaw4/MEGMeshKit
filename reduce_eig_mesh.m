@@ -13,14 +13,17 @@ try k = varargin{1}; catch k = 8; end
 [~, n] = PEig90(x);
 ncyc   = 0;
 maxv   = max(x(:));
+en     = 100;
 
 while n > d
     ncyc = ncyc + 1;
     x = spm_mesh_smooth(export(gifti(mesh)), x, k);
     [~, n] = PEig90(x);
     
+    en = 90*(en/100); fprintf('\b');fprintf('(%d %%)\n',round(en));
     
     y = (x./max(x(:)))*maxv;
+    %x = y;
     
     % Put some limit on cycles
     dn(ncyc) = n;

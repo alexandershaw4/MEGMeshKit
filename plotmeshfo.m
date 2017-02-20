@@ -65,6 +65,8 @@ hold on;
 
 % enable blanking of overlay at crit t [trs]
 if ~isempty(trs);
+    if any(ol(:)) < 0
+        
     mapping = max(abs(ol));
     cmap = jet(length(ol));
     tm   = max(ol);
@@ -81,6 +83,21 @@ if ~isempty(trs);
     end
     cmap(mid-sz:mid+sz,:)=zs+.4;
     colormap(cmap);
+    
+    else
+        
+        mapping = max(abs(ol));
+        cmap = jet(length(ol));
+        tm   = max(mean(ol,1));
+        
+        % Make values 0-5 gray:
+        sz  = length(cmap);
+        pos = round( trs*(sz/100));
+        cmap(1:pos,:) = .4;
+        colormap(cmap)
+        
+    end
+    
 else
    mapping = max(abs(ol));
  

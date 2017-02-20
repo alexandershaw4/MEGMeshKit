@@ -71,8 +71,8 @@ if strcmpi(fmt,'mesh')
     %----------------------------------------------------------------------
     for c = 1:numel(ssq)
         
-        fprintf('%s%30s',repmat(sprintf('\b'),1,30),...
-            sprintf('...mesh %d/%d',c,numel(ssq)));                     %-#
+%         fprintf('%s%30s',repmat(sprintf('\b'),1,30),...
+%             sprintf('...mesh %d/%d',c,numel(ssq)));                     %-#
         
         %-Filename
         %------------------------------------------------------------------

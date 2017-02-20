@@ -30,4 +30,8 @@ mmy = squeeze(mean(my,3));
 
 time = D.inv{1}.inverse.pst;
 
-plotmeshfov(D,abs(component{1}),5e-4,.3,'Test',[80,45]);
+%plotmeshfov(D,abs(component{1}),80,.3,'Test_oldrov',[80,45]);
+
+%or
+
+plotmeshfovt(D,abs(mmy),80,.3,'Test_oldrov',[90,45],[0 .3]);
