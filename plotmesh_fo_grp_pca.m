@@ -1,15 +1,12 @@
-function [mst,st] = plotmesh_fo_grp_pca(D,t)
+function [mst,st] = plotmesh_fo_grp_pca(D,t,cfg)
 % Plot glass mesh brain with MNI coordinates marked
 % from source localised SPM MEEG objects
 %
 % D is a cell array of subjects' D filenames
 % t is trial(s) types [conditions] to include - e.g. 1 or [1 5 6] or 'On'
 %
-% See mesh_pca1.m for options including:
+% See mesh_pca1.m for options
 %
-% woi  is time window of interest                   [optional]
-% foi  is freq window of interest                   [optional]
-% type is 'evoked' 'induced' or 'trials'            [optional]
 %
 % AS2016
 
@@ -43,7 +40,9 @@ for s = 1:length(D)
     
     clear y
     for nt = 1:length(tt)
-        y{nt} = mesh_pca1(D{s},tt(nt));
+        try    y{nt} = mesh_pca1(D{s},tt(nt),cfg);
+        catch; y{nt} = mesh_pca1(D{s},tt(nt));
+        end
     end
     
     yy     = cat(2,y{:});

@@ -1,15 +1,17 @@
-function y = mesh_pca1(D,cond)
+function y = mesh_pca1(D,cond,varargin)
 % mesh-based pca [with plots] for spm source reconstructed m/eegs
 %
 % AS
 
-doplot = 0;       % plot 
-doimg  = 0;       % save images [g/nifti]
-invi   = 1;       % inversion index (see D.val)
-woi    = [0 .35]; % window of interest (secs)
-foi    = [];      % opt. foi [but reduces rank]
-k      = 8;       % smoothing kern size
-neig   = 20;      % num eigens 
+try Strct2WkspLocal(varargin{:}); end
+
+try doplot; catch doplot = 0;       end % plot 
+try doimg;  catch doimg  = 0;       end % save images [g/nifti]
+try invi;   catch invi   = 1;       end % inversion index (see D.val)
+try woi;    catch woi    = [0 .35]; end % window of interest (secs)
+try foi;    catch foi    = [];      end % opt. foi [but reduces rank]
+try k;      catch k      = 8;       end % smoothing kern size
+try neig;   catch neig   = 20;      end % num eigens 
 
 coni   = strmatch(cond,D.inv{1}.inverse.trials);
 
@@ -58,4 +60,17 @@ y     = reduce_eig_mesh(mesh,TOI,neig,k);
 
 if doimg
         writeims(D,mean(y,2),['comp_' cond]);
+end
+
+end
+
+function Strct2WkspLocal(S)
+
+f = fieldnames(S);
+
+for i = 1:length(f)
+    assignin('caller',f{i},(S.(f{i})));
+end
+
+
 end
