@@ -1,9 +1,10 @@
-function writeims(D,ol,sname)
-% Utility for saving functional mesh overlay to gifti
+function writeims(D,ol,sname,normm)
+% Utility for saving functional mesh overlay to g/nifti
 %
 % D  is a subjects' meeg object (for getting templt mesh verts)
 % ol is the overlay you want to write [1xnverts]
 % sname is filename
+% normm is whether to scale image [def true / 1]
 %
 % [based on spms mesh 2 voxels]
 % AS
@@ -14,6 +15,8 @@ foi          = [];
 Nw           = size(woi,1);
 smooth       = 8;
 fmt          = 'mesh'; % or 'img';
+
+if nargin < 4; normm = 1; end
 
 sMRIfile = fullfile(spm('dir'),'canonical','avg152T2.nii');
 Vin      = spm_vol(sMRIfile);
@@ -84,7 +87,9 @@ if strcmpi(fmt,'mesh')
         
         %-Normalise
         %------------------------------------------------------------------
-        Contrast = ssq{c} / scale;
+        if normm ; Contrast = ssq{c} / scale;
+        else       Contrast = ssq{c};
+        end
         
         %-Write mesh
         %------------------------------------------------------------------
@@ -138,7 +143,9 @@ for c = 1:length(ucon)
             
             %-Normalise
             %----------------------------------------------------------------------
-            Contrast = ssq{ind(i)} / scale;
+            if normm; Contrast = ssq{ind(i)} / scale;
+            else      Contrast = ssq{ind(i)};
+            end
             
             %-Interpolate those values into voxels
             %----------------------------------------------------------------------
