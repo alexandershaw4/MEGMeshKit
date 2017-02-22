@@ -6,7 +6,11 @@ function writeims(D,ol,sname,normm)
 % sname is filename
 % normm is whether to scale image [def true / 1]
 %
-% [based on spms mesh 2 voxels]
+% 
+% needs spm_mesh_to_grid with integralConservation = false;
+%
+%
+%
 % AS
 
 val          = D.val;

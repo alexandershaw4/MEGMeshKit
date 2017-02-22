@@ -12,11 +12,7 @@ F = dir('bawin*.mat'); F = {F.name};
 f = loadarrayspm(F);
 f = f';
 
-toi = [0 .3];
-foi = [];
 
-trans = .8;          % overlay alpha (0 - 1)
-typ   = 'trials';
 
 % calculate group responses
 % [Neutm,Neut]  = plotmesh_fo_grp_pca(f,[],{'NeutralAll'},toi,foi,typ);

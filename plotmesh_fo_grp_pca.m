@@ -12,7 +12,7 @@ function [mst,st] = plotmesh_fo_grp_pca(D,t,cfg)
 
 % options
 %---------------------------------------------------------
-robust_cluster = 0;
+robust_cluster = 0; % sudo inflate peaks
 
 
 if iscell(D) && ~isobject(D{1}); D = loadarrayspm(D);

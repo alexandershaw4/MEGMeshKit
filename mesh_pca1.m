@@ -3,7 +3,7 @@ function y = mesh_pca1(D,cond,varargin)
 %
 % AS
 
-try Strct2WkspLocal(varargin{:}); end
+try Strct2WkspLocal(varargin{:}); end   % unpack configuration
 
 try doplot; catch doplot = 0;       end % plot 
 try doimg;  catch doimg  = 0;       end % save images [g/nifti]
