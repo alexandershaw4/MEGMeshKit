@@ -114,8 +114,9 @@ shading interp
 lighting none
 brighten(.2);
 
-caxis([-mapping mapping]);
-
+if any(ol(:)) < 0
+    caxis([-mapping mapping]);
+end
 
 
 if ~isempty(o) % MNIs

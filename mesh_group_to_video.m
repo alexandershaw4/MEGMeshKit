@@ -34,4 +34,4 @@ time = D.inv{1}.inverse.pst;
 
 %or
 
-plotmeshfovt(D,abs(mmy),80,.3,'Test_oldrov',[90,45],[0 .3]);
+plotmeshfovt(D,abs(mmy),80,.3,'Test_oldrov',[90,45],[0 .35]);
