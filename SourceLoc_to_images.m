@@ -20,10 +20,10 @@ f = f';
 % [Angrm,Angr]  = plotmesh_fo_grp_pca(f,[],{'AngryAll'},toi,foi,typ);
 % [FTm,FT]      = plotmesh_fo_grp_pca(f,[],{'FTAll'},toi,foi,typ);
 
-%cfg.woi  = [0 .2];
-%cfg.neig = 10;
+cfg.woi  = [0 .2];
+cfg.neig = 10;
 
-[Devm,Dev]   = plotmesh_fo_grp_pca(f,{'Dev'});
+[Devm,Dev]   = plotmesh_fo_grp_pca(f,{'Dev'},cfg);
 [rep1m,rep1] = plotmesh_fo_grp_pca(f,{'rep1'});
 [rep2m,rep2] = plotmesh_fo_grp_pca(f,{'rep2'});
 [rep3m,rep3] = plotmesh_fo_grp_pca(f,{'rep3'});
