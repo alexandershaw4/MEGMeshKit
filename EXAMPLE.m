@@ -7,30 +7,27 @@ cd ~/faces/ ;           % wd
 
 
 f   = loadarrayspm(F)'; % F is a cell array of MEEG filenames
-toi = [0 .35];          % time window of interest
-foi = [];               % freqyency window
 
 
-% plot options
-%------------------------------------------------
-global inflate ; inflate = .04;   % inflate
-global thr     ; thr     = [];    % threshold for making t(+/- n) = 0
-global trs     ; trs     = .07;   % rescale theshold
-
-trans = .8;       % overlay alpha (0 - 1)
-typ   = 'trials'; % trials or evoked
+global inflate ; inflate = .04;   % inflate mesh
 
 
 % Calculate some group responses - here there are conditions called
 % 'NeutralAll' and 'HappyAll' in D.condlist which have been source
 % localised in spm
 
-Neut  = plotmesh_fo_grp(f,[],{'NeutralAll'},toi,foi,typ,[],trans);
-Happ  = plotmesh_fo_grp(f,[],{'HappyAll'},toi,foi,typ,[],trans);
+cfg.woi  = [0 .2]; % cfg optional - see help mesh_pca1
+cfg.neig = 20; 
 
-% I also want to average over these 2 conditions:
-All   = plotmesh_fo_grp(f,[],{'NeutralAll',...
-                              'HappyAll'},toi,foi,typ,[],trans);
+[Neutm,Neut]   = plotmesh_fo_grp_pca(f,{'NeutralAll'},cfg);
+[Happm,Happ]   = plotmesh_fo_grp_pca(f,{'HappyAll'},cfg);
+[Angrm,Angr]   = plotmesh_fo_grp_pca(f,{'AngryAll'},cfg);
+[FTAllm,FTAll] = plotmesh_fo_grp_pca(f,{'FTAll'},cfg);
+
+[Allm,All]     = plotmesh_fo_grp_pca(f,{'NeutralAll',...
+                              'HappyAll',...
+                              'AngryAll',...
+                              'FTAll'},cfg);
 
 crit  = 5.5025e-06; % if using t-image, use a critical t on colbar
 alph  = .2;         % alpha value for overlay
