@@ -71,7 +71,7 @@ if ~isempty(tval);
         % if is abs(y) then thresh lower colbar by n%
         mapping = max(abs(mean(ol,1)));
         %cmap = jet(length(ol));
-        cmap = hot(length(ol));
+        cmap = jet(length(ol));
         tm   = max(mean(ol,1));
         
         % Make values 0-5 gray:
@@ -114,8 +114,7 @@ open(writerObj);
 fprintf('\n');
 
 tvec = linspace(t(1),t(2),size(ol,1));
-
-fh = gcf;
+fh   = gcf;
 
 for k = 1:size(ol,1)
     strg = sprintf('Generating frame %d of %d',k,size(ol,1));
@@ -139,7 +138,7 @@ for k = 1:size(ol,1)
     set(gcf,'inverthardcopy','off');
     hold on;
     
-    mesh    = D.inv{1}.forward(end).mesh;
+    mesh    = D.inv{1}.forward(1).mesh;
     ol(k,:) = spm_mesh_smooth(export(gifti(mesh)), (ol(k,:))', 8);
 
     trisurf(face,x,y,z,ol(k,:)); 

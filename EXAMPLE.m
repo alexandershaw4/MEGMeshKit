@@ -16,8 +16,8 @@ global inflate ; inflate = .04;   % inflate mesh
 % 'NeutralAll' and 'HappyAll' in D.condlist which have been source
 % localised in spm
 
-cfg.woi  = [0 .2]; % cfg optional - see help mesh_pca1
-cfg.neig = 20; 
+cfg.woi  = [0 .3]; % cfg optional - see help mesh_pca1
+cfg.neig = 30; 
 
 [Neutm,Neut]   = plotmesh_fo_grp_pca(f,{'NeutralAll'},cfg);
 [Happm,Happ]   = plotmesh_fo_grp_pca(f,{'HappyAll'},cfg);
@@ -28,6 +28,9 @@ cfg.neig = 20;
                               'HappyAll',...
                               'AngryAll',...
                               'FTAll'},cfg);
+
+[Devm,Dev] = plotmesh_fo_grp_pca(f,{'Dev'},cfg);
+
 
 crit  = 5.5025e-06; % if using t-image, use a critical t on colbar
 alph  = .2;         % alpha value for overlay

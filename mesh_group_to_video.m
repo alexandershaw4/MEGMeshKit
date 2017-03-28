@@ -5,7 +5,8 @@ for i = 1:length(f);
     clear D; 
     
     D    = spm_eeg_load(f{i}); % load D
-    y{i} = mesh_pca1(D,'Dev'); % smooth until ncomps
+    %y{i} = mesh_pca1(D,'Dev'); % smooth until ncomps
+    y{i} = mesh_ica1(D,'Dev');
 end
 
 yy    = cat(3,y{:});
@@ -34,4 +35,4 @@ time = D.inv{1}.inverse.pst;
 
 %or
 
-plotmeshfovt(D,abs(mmy),80,.3,'Test_oldrov',[90,45],[0 .35]);
+plotmeshfovt(D,abs(mmy),80,.3,'example',[90,45],[0 .35]);
