@@ -48,7 +48,7 @@ end
 
 % glass brain
 h = patch('faces',face,'vertices',[x(:) y(:) z(:)]);
-set(h,'FaceColor',[.9 .9 .9]);
+set(h,'FaceColor',[.99 .99 .99]);
 box off;
 grid off;
 whitebg(1,'w'); 

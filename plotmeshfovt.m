@@ -17,6 +17,7 @@ global inflate
 
 checkexist(sname);
 
+fc  = .1; % face col [.9]
 frt = 20;
 D   = spm_eeg_load(D);
 
@@ -124,7 +125,7 @@ for k = 1:size(ol,1)
     % glass brain
     cla();
     h = patch('faces',face,'vertices',[x(:) y(:) z(:)]);
-    set(h,'FaceColor',[.9 .9 .9]);
+    set(h,'FaceColor',[fc fc fc]);
     box off;
     grid off;
     whitebg(1,'w'); 
