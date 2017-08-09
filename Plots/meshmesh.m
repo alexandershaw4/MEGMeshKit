@@ -10,5 +10,5 @@ set(h,'FaceColor',[C C C]);
 box off;
 grid off; 
 set(h,'EdgeColor','none')
-alpha(.3);
+alpha(.5);
 set(gca,'visible','off');
