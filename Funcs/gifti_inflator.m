@@ -9,7 +9,7 @@ if infl > 1; infl = 1/infl; end
 
 g  = gifti(surf);
 f  = g.faces;
-v  = g.vertices/( max(g.vertices(:))*(pi/2) );
+v  = g.vertices;%/( max(g.vertices(:))*(pi/2) );
 n  = vsmooth(v, double(f), infl);
 
 g.vertices = n;
