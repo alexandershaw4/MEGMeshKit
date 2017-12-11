@@ -10,7 +10,8 @@ DisplTol      = 0.01 * VoxSize;
 DisplTol      = [DisplTol, 0];
 
 
-C = sparse(Faces(:), [Faces(:, 2); Faces(:, 3); Faces(:, 1)], true);
+%C = sparse(Faces(:), [Faces(:, 2); Faces(:, 3); Faces(:, 1)], true);
+C = Faces';
 CCell = cell(nV, 1);
 for v = 1:nV
     CCell{v} = find(C(:, v));
